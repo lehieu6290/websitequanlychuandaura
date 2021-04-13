@@ -1,20 +1,49 @@
 const express = require('express');
+const passport = require('passport');
+const session = require('express-session');
+const session_config = require('./config/session');
+const initPassportLocal = require('./controllers/auth/passportLocal');
+
 const app = express();
 const port = 3000;
 
+//Set up
 app.set("view engine", "ejs");
+app.use('/public', express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }))
+app.use(session(session_config));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Test
+// app.get('/', (req, res) => {
+//     res.render('index', { fullname: req.user.magiangvien });
+// });
+
+// const db = require('./config/database');
+// const bcrypt = require('bcrypt');
+// app.get('/register', async (req, res) => {
+//     let passwordHashed = await bcrypt.hash('12345', 10);
+//     let query = "INSERT INTO giangvien VALUES('b1706696', 'Lê Trung Hiếu', 'hieub1706696@student.ctu.edu.vn', false, $1)";
+//     db.query(query, [passwordHashed])
+//     .then(() => {
+//         res.send("OK");
+//     }).catch(() => {
+//         res.send("NOT");
+//     })
+// });
+
+//Init Passport Local
+initPassportLocal(passport);
 
 // Import routes
-const accountRoute = require('./routes/accountRoute');
+const giangvienRouter = require('./routes/giangvienRouter');
 
-app.use('/public', express.static('public'));
+// Use routes
+app.use('/', giangvienRouter);
 
-app.get('/', (req, res) => {
-    res.render('index', { fullname: 'Tôi' });
-});
-
-app.use('/account', accountRoute);
-
+//Start server
 app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
