@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách chuẩn <%= data.rows[0].mahocphan %></title>
+</head>
+<body>
+    <h1>Danh sách chuẩn đầu ra của học phần <%= data.rows[0].mahocphan %></h1>
+    <% if (data.rowCount > 0) { %>
+        <table border="1">
+            <th>Mã chuẩn</th>
+            <th>Nội dung chuẩn</th>
+            <th>Phần trăm mức điểm</th>
+            <th>Ngưỡng điểm</th>
+        <% data.rows.forEach((chitietchuan) => { %>
+            <tr>
+                <td><%= chitietchuan.machuan %></td>
+                <td><%= chitietchuan.noidung %></td>
+                <td><%= chitietchuan.phantram %></td>
+                <td><%= chitietchuan.nguongdiem %></td>
+            </tr>
+        <% }) %>
+        </table>
+    <% }else{ %>
+        <p>Không có chuẩn đầu ra nào để hiển thị</p>
+    <% } %>
+</body>
+</html>

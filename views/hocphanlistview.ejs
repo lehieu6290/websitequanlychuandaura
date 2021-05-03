@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý chuẩn của các học phần</title>
+</head>
+<body>
+    <h1>Danh sách học phần</h1>
+    <% if (data.rowCount > 0) { %>
+        <table border="1">
+        <% data.rows.forEach((hocphan) => { %>
+            <tr>
+            <td><%= hocphan.mahocphan %></td>
+            <td><%= hocphan.tenhocphan %></td>
+            <td><a href="/hocphan/<%= hocphan.mahocphan %>">Xem chuẩn đầu ra</a></td>
+            </tr>
+        <% }) %>
+        </table>
+    <% }else{ %>
+        <p>Không có học phần nào để hiển thị</p>
+    <% } %>
+</body>
+</html>

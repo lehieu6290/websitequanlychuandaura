@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tỷ lệ chuẩn</title>
+</head>
+<body>
+    <h1>Danh sách tỷ lệ chuẩn</h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        <input type="hidden" id="idlophocphan" value="<%= idlophocphan %>">
+        <table border="1">
+            <tr>
+                <td>Mã chuẩn</td>
+                <td>Nội dung</td>
+                <td>Tỷ lệ</td>
+            </tr>
+            <% data.rows.forEach((tylechuan) => { %>
+                <tr>
+                <td class="machuan"><%= tylechuan.machuan %></td>
+                <td><%= tylechuan.noidung %></td>
+                <% if(tylechuan.tyle){ %>
+                    <td><input class="tyleInput" type="text" value="<%= tylechuan.tyle %>" required></td>
+                <% }else{ %>
+                    <td><input class="tyleInput" type="text" required></td>
+                <% } %>
+                </tr>
+            <% }) %>
+        </table>
+        <input type="submit" value="Cập nhật" id="submitButton">
+    </form>
+
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function(event){
+            event.preventDefault();
+            const tyleInputArray = document.getElementsByClassName("tyleInput");
+            const machuanArray = document.getElementsByClassName("machuan");
+            
+            let total = 0;
+            for(let i = 0; i < tyleInputArray.length; i++){
+                total += parseInt(tyleInputArray[i].value);
+            }
+
+            if(total != 100){
+                console.log(total)
+                alert("Tổng phải bằng 100");
+                return false;
+            }
+
+            let arr = [];
+            for(let i = 0; i < tyleInputArray.length; i++){
+                let obj = { machuan: machuanArray[i].innerHTML, tyle: tyleInputArray[i].value };
+                arr.push(obj);
+            }
+            
+            const idlophocphan = document.getElementById("idlophocphan").value;
+            let data = { idlophocphan, data: arr };
+
+            fetch('/lophocphan/tylechuan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status){
+                    alert("Cập nhật thành công");
+                }else{
+                    alert("Cập nhật thất bại. Vui lòng thử lại");
+                }
+            });
+        })
+    </script>
+</body>
+</html>

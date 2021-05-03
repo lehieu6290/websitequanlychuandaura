@@ -11,7 +11,7 @@ module.exports ={
 
     renderIndexView(req, res){
         if(req.isAuthenticated()){
-            res.render('index', { fullname: req.user.magiangvien });
+            res.render('index', { fullname: req.user.tengiangvien });
         }else{
             res.redirect('login');
         }

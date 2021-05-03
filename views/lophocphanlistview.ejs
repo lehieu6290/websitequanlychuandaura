@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý lớp học phần</title>
+</head>
+<body>
+    <h1>Danh sách lớp học phần</h1>
+    <% if(data.rowCount > 0){ %>
+        <table border="1">
+        <tr>
+            <th>Mã lớp học phần</th>
+            <th>Tên học phần</th>
+            <th colspan="3">Hành động</th>
+        </tr>
+        <% data.rows.forEach((lophocphan) => { %>
+            <tr>
+            <td><%= lophocphan.malophocphan %></td>
+            <td><%= lophocphan.tenhocphan %></td>
+            <td><a href="/lophocphan/diem/<%= lophocphan.idlophocphan %>">Nhập điểm</a></td>
+            <td><a href="/lophocphan/tylechuan/<%= lophocphan.idlophocphan %>">Nhập tỷ lệ chuẩn</a></td>
+            <td><a href="">Xem đánh giá</a></td>
+            </tr>
+        <% }) %>
+        </table>
+    <% }else{ %>
+        <p>Không có lớp học phần nào để hiển thị</p>
+    <% } %>
+</body>
+</html>

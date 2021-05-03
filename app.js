@@ -39,9 +39,13 @@ initPassportLocal(passport);
 
 // Import routes
 const giangvienRouter = require('./routes/giangvienRouter');
+const hocphanRouter = require('./routes/hocphanRouter');
+const lophocphanRouter = require('./routes/lophocphanRouter');
 
 // Use routes
 app.use('/', giangvienRouter);
+app.use('/hocphan', hocphanRouter);
+app.use('/lophocphan', lophocphanRouter);
 
 //Start server
 app.listen(port, () => {

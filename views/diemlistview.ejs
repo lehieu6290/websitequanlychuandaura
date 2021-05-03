@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý điểm</title>
+</head>
+<body>
+    <h1>Danh sách điểm</h1>
+    <% if(data.rowCount > 0){ %>
+        <table border="1">
+        <tr>
+            <td>Mã số sinh viên</td>
+            <td>Họ tên</td>
+            <td>Điểm</td>
+        </tr>
+        <% data.rows.forEach((diem) => { %>
+            <tr>
+            <td><%= diem.masinhvien %></td>
+            <td><%= diem.hoten %></td>
+            <td><input type="text" value="<%= diem.diem %>"></td>
+            </tr>
+        <% }) %>
+        </table>
+    <% }else{ %>
+        <p>Không có sinh viên nào để hiển thị</p>
+    <% } %>
+</body>
+</html>
