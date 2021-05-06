@@ -9,4 +9,16 @@ ChiTietChuan.getAll = (mahocphan) => {
     return db.query(queryString, params);
 }
 
+ChiTietChuan.delete = (mahocphan, machuan) => {
+    const queryString = "DELETE FROM ChiTietChuan WHERE mahocphan = $1 AND machuan = $2";
+    const params = [mahocphan, machuan];
+    return db.query(queryString, params);
+}
+
+ChiTietChuan.update = (mahocphan, machuan, mamucdiem, phantram) => {
+    const queryString = "UPDATE ChiTietChuan SET mamucdiem = $3, phantram = $4 WHERE mahocphan=$1 AND machuan=$2";
+    const params = [mahocphan, machuan, mamucdiem, phantram];
+    return db.query(queryString, params);
+}
+
 module.exports = ChiTietChuan;

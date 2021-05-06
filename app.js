@@ -21,11 +21,12 @@ app.use(passport.session());
 //     res.render('index', { fullname: req.user.magiangvien });
 // });
 
+// Đăng ký
 // const db = require('./config/database');
 // const bcrypt = require('bcrypt');
 // app.get('/register', async (req, res) => {
 //     let passwordHashed = await bcrypt.hash('12345', 10);
-//     let query = "INSERT INTO giangvien VALUES('b1706696', 'Lê Trung Hiếu', 'hieub1706696@student.ctu.edu.vn', false, $1)";
+//     let query = "INSERT INTO giangvien VALUES('b1706697', 'Nguyễn Văn A', 'ab1706697@student.ctu.edu.vn', false, $1)";
 //     db.query(query, [passwordHashed])
 //     .then(() => {
 //         res.send("OK");
@@ -41,11 +42,19 @@ initPassportLocal(passport);
 const giangvienRouter = require('./routes/giangvienRouter');
 const hocphanRouter = require('./routes/hocphanRouter');
 const lophocphanRouter = require('./routes/lophocphanRouter');
+const mucdiemRouter = require('./routes/mucdiemRouter');
+const chitietchuanRouter = require('./routes/chitietchuanRouter');
+const nguoidungRouter = require('./routes/nguoidungRouter');
+const chuandauraRouter = require('./routes/chuandauraRouter');
 
 // Use routes
 app.use('/', giangvienRouter);
 app.use('/hocphan', hocphanRouter);
 app.use('/lophocphan', lophocphanRouter);
+app.use('/mucdiem', mucdiemRouter);
+app.use('/chitietchuan', chitietchuanRouter);
+app.use('/nguoidung', nguoidungRouter);
+app.use('/chuandaura', chuandauraRouter);
 
 //Start server
 app.listen(port, () => {

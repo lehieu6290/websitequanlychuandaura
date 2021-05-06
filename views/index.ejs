@@ -4,11 +4,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Trang chủ</title>
+    <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
-    <h1>Xin chào <%= fullname %></h1>
-    <a href="/lophocphan">Quản lý lớp học phần</a><br>
-    <a href="/hocphan">Quản lý chuẩn của các học phần</a>
+    <nav id="navbar">
+        <div id="avatar-container">
+            <div>
+                <img id="avatar" src="/public/images/avatar.png">
+                <div>
+                    <a href=""><p style="margin-bottom: 5px; font-weight: bold; font-size: 17px;"><%= hoten %></p></a>
+                    <% if(admin){%>
+                        <p>Quản trị viên</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div id="logout-container">
+                <a id="logout-button" href="/logout">
+                    <span>Đăng xuất</span>
+                    <img src="/public/images/logout.png">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <ul>
+            <li><a href="/" class="active">Trang chủ</a></li>
+            <li><a href="/lophocphan">Lớp học phần</a></li>
+            <% if(admin){%>
+            <li><a href="/hocphan">Chuẩn của các học phần</a></li>
+            <li><a href="/chuandaura">Chuẩn đầu ra</a></li>
+            <li><a href="/nguoidung">Người dùng</a></li>
+            <% } %>
+        </ul>
+    </nav>
+    <main>
+        <h2 id="title">Tổng quan</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in eros sapien. Etiam risus libero, tempor condimentum augue eu, varius vestibulum nulla. Vestibulum nisi justo, maximus eu nisi at, laoreet dapibus dui. Aenean felis nisi, fermentum vel mauris eget, sagittis aliquet tellus. Curabitur in lacinia ligula, sit amet pharetra augue. Morbi ut diam lobortis eros ultrices laoreet. Curabitur suscipit ante vitae iaculis rhoncus. Morbi pharetra sapien quis sem finibus, sit amet porta nisi pretium. Donec eleifend nec libero id maximus.
+
+            Integer pellentesque at justo congue eleifend. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris sit amet scelerisque tellus. Pellentesque nisi leo, fringilla ac lectus non, placerat tristique ipsum. Duis sem metus, volutpat vel pulvinar et, laoreet ut tellus. Quisque et varius mi. Duis convallis posuere lacus. Nullam nec semper nisi. Donec lacinia ultricies lobortis. Pellentesque metus nibh, aliquet at porttitor eget, ultrices sed nisi. Proin et rutrum mauris. In et lectus tristique, dictum metus sit amet, eleifend quam. Donec rhoncus rhoncus dapibus.
+            
+            Integer convallis dui quis sapien ultricies, hendrerit consectetur ligula pellentesque. Pellentesque tempor tempor orci ac euismod. Aliquam eu risus convallis, luctus risus nec, eleifend velit. Nam tristique volutpat tincidunt. Quisque id neque vitae sapien convallis placerat scelerisque ut nunc. Aenean viverra venenatis facilisis. Duis sit amet sapien lectus. Nunc varius porttitor libero, eget semper lacus rhoncus et. Curabitur nisl eros, volutpat id hendrerit et, accumsan eget purus. In hac habitasse platea dictumst.
+            
+            Nulla consectetur ipsum eleifend, pulvinar arcu eget, faucibus sem. Aenean id felis id magna sollicitudin varius. Nullam luctus efficitur auctor. Proin ullamcorper metus id dolor volutpat fringilla nec vel risus. Quisque diam quam, iaculis ut imperdiet ut, feugiat vel nisi. Nullam sit amet eros tortor. Integer nisl nisi, elementum eu auctor sed, accumsan at mauris. Ut luctus vitae mauris sed interdum. Pellentesque eget tellus nec nunc feugiat vehicula nec non nibh. Duis eget mattis lacus, at sodales magna. Nulla scelerisque erat in leo congue porta. Nunc eu lobortis libero. Nullam eu pharetra magna.
+            
+            Duis eget eros sapien. Cras dignissim augue a libero condimentum egestas quis eu tortor. Donec sagittis dui euismod viverra commodo. Quisque vulputate tristique massa nec maximus. Nulla facilisi. Curabitur vitae sem congue, dapibus nulla ac, dignissim dolor. Phasellus turpis tortor, porta a viverra vitae, lobortis ac risus. Donec efficitur blandit felis, ac congue metus viverra a. Mauris ut cursus nunc. Aliquam vitae faucibus arcu, ac placerat enim. Suspendisse potenti. Duis dignissim ante ante, at mollis sapien aliquet vitae.
+            
+            Pellentesque finibus sapien at justo egestas gravida. Suspendisse eget purus quis massa porttitor malesuada ut hendrerit ex. Quisque tempor velit sed risus commodo volutpat. In quis nibh sed ipsum congue vulputate eu at magna. Nunc sit amet malesuada leo. Proin vel nisl nec ipsum mollis euismod. Quisque dapibus diam dolor, at fringilla sapien ornare efficitur. Vivamus laoreet efficitur porttitor. Nullam cursus lectus quis convallis fringilla.
+            
+            Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus molestie fringilla velit at eleifend. Praesent rhoncus sed orci vel posuere. Donec consectetur volutpat ipsum, id pharetra dui sagittis ac. Integer tincidunt placerat ante, id aliquam quam eleifend nec. Nullam porta enim quis ipsum laoreet, quis ultrices nulla tempor. In leo elit, tempus in ullamcorper a, sollicitudin eu tortor.
+            
+            Nulla augue ligula, volutpat eu varius eget, ullamcorper nec augue. Suspendisse consequat, velit vehicula pellentesque ullamcorper, quam magna maximus tellus, sed pharetra ex magna in turpis. Sed ac aliquam lorem. Sed malesuada volutpat euismod. Nullam at augue porta, tincidunt sapien in, cursus justo. Nam suscipit est lorem, vitae gravida urna cursus nec. Maecenas eget aliquet ligula. Duis vitae ipsum eu eros eleifend condimentum non ut lorem. Nulla leo metus, pretium nec elit in, dignissim placerat quam. Quisque rutrum diam turpis. Suspendisse justo ligula, faucibus ut semper nec, vestibulum commodo lectus. Aenean consectetur lectus non arcu tincidunt, ac vehicula orci tristique. Mauris nibh eros, pellentesque scelerisque felis a, vestibulum cursus massa.
+            
+            Aliquam libero velit, pellentesque sed libero et, cursus placerat nisi. Suspendisse magna dui, sollicitudin in fermentum sit amet, tempor vel nisl. Quisque diam libero, facilisis nec neque a, convallis cursus ipsum. Maecenas in mauris consectetur, maximus risus at, pharetra nisi. Aenean sit amet est posuere, cursus nibh eu, consequat nisi. Nulla pharetra feugiat ligula, vitae pharetra nisl vestibulum vitae. Quisque vel blandit ligula, luctus blandit lorem. Donec id scelerisque elit. Aliquam iaculis nulla et mauris egestas, sed pulvinar felis ornare. Proin sollicitudin erat lacinia lectus suscipit rhoncus. In hac habitasse platea dictumst. Etiam volutpat facilisis sollicitudin. Duis vel libero dignissim, elementum sem sed, pellentesque eros.
+            
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam finibus metus tortor, sit amet lobortis turpis volutpat ut. Nulla ultrices eget nisi placerat faucibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus suscipit libero in nulla vestibulum, ut pharetra sem euismod. Vestibulum eu condimentum ex, id egestas enim. Cras sit amet metus justo. Donec molestie efficitur nulla ut sagittis. Curabitur interdum rhoncus lacus eget condimentum. Vivamus dictum, mauris at tincidunt vehicula, nibh enim sodales sapien, a accumsan neque nisl nec ante. Etiam vestibulum sapien hendrerit felis vestibulum, eu laoreet turpis gravida. Curabitur lacinia gravida malesuada. Aenean suscipit finibus pellentesque.</p>
+    </main>
 </body>
 </html>

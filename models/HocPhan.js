@@ -7,4 +7,9 @@ HocPhan.getAll = () => {
     return db.query(queryString);
 }
 
+HocPhan.search = (mahocphan) => {
+    const queryString = "SELECT * FROM HocPhan WHERE mahocphan LIKE '%"+ mahocphan.toUpperCase() +"%' OR LOWER(tenhocphan) LIKE '%"+ mahocphan.toLowerCase() +"%'";
+    return db.query(queryString);
+}
+
 module.exports = HocPhan;

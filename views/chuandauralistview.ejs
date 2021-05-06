@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý chuẩn đầu ra</title>
+    <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div id="avatar-container">
+            <div>
+                <img id="avatar" src="/public/images/avatar.png">
+                <div>
+                    <a href=""><p style="margin-bottom: 5px; font-weight: bold; font-size: 17px;"><%= hoten %></p></a>
+                    <% if(admin){%>
+                        <p>Quản trị viên</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div id="logout-container">
+                <a id="logout-button" href="/logout">
+                    <span>Đăng xuất</span>
+                    <img src="/public/images/logout.png">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <ul>
+            <li><a href="/">Trang chủ</a></li>
+            <li><a href="/lophocphan">Lớp học phần</a></li>
+            <% if(admin){%>
+            <li><a href="/hocphan">Chuẩn của các học phần</a></li>
+            <li><a href="/chuandaura" class="active">Chuẩn đầu ra</a></li>
+            <li><a href="/nguoidung">Người dùng</a></li>
+            <% } %>
+        </ul>
+    </nav>
+    <main>
+        <h2 id="title">Danh sách chuẩn đầu ra</h2>
+        <div id="insertbuttoncontainer">
+            <button onclick="openAddForm()">Thêm chuẩn đầu ra</button>
+            <form action="/chuandaura/search" method="POST" id="searchcontainer" onsubmit="return checkSearchForm()">
+                <input id="searchinput" name="machuan" type="text" placeholder="Nhập mã hoặc nội dung chuẩn" autocomplete="off">
+                <button id="searchbutton">Tìm</button>
+            </form>
+        </div>
+        <br>
+        <% if(data.rowCount > 0){ %>
+        <table id="list">
+            <tr>
+                <td>Mã chuẩn</td>
+                <td>Nội dung</td>
+                <td>Hành động</td>
+            </tr>
+            <%data.rows.forEach(chuandaura => {%>
+                <tr>
+                    <td><%= chuandaura.machuan %></td>
+                    <td><%= chuandaura.noidung %></td>
+                    <td>
+                        <a onclick="openUpdateForm('<%= chuandaura.machuan %>', '<%= chuandaura.noidung %>')" class="greenbg">Cập nhật</a>
+                        <a onclick="openDeleteForm('<%= chuandaura.machuan %>')" class="redbg">Xóa</a>
+                    </td>
+                </tr>
+            <%})%>
+        </table>
+        <%}else{%>
+            <p style="text-align: center;">Không có chuẩn đầu ra nào để hiển thị</p>
+        <%}%>
+
+        <div id="addform" style="display: none;">
+            <div id="formbackground">
+                <div id="center">
+                    <div id="formcontainer">
+                        <h2 id="formtitle">Thêm chuẩn đầu ra</h2>
+                        <p id="adderror" class="error" style="text-align: center;"></p>
+                        <table id="formtable">
+                            <tr>
+                                <td><label for="machuanaddinput">Mã chuẩn</label></td>
+                                <td>
+                                    <input type="text" id="machuanaddinput" class="forminput">
+                                    <p class="error" id="machuanadderror"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="noidungaddinput">Nội dung</label></td>
+                                <td>
+                                    <textarea rows="7" style="font-family: Roboto, sans-serif;" id="noidungaddinput" class="forminput"></textarea>
+                                    <p class="error" id="noidungadderror"></p>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="center">
+                            <a class="greenbg formbutton" id="addbutton">Thêm</a>
+                            <a class="redbg formbutton" onclick="closeAddForm()">Hủy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="updateform" style="display: none;">
+            <div id="formbackground">
+                <div id="center">
+                    <div id="formcontainer">
+                        <h2 id="formtitle">Cập nhật thông tin chuẩn đầu ra</h2>
+                        <p id="updateerror" class="error" style="text-align: center;"></p>
+                        <table id="formtable">
+                            <tr>
+                                <td><label for="machuanupdateinput">Mã chuẩn</label></td>
+                                <td><input type="text" id="machuanupdateinput" class="forminput" disabled></td>
+                            </tr>
+                            <tr>
+                                <td><label for="noidungupdateinput">Nội dung</label></td>
+                                <td>
+                                    <textarea rows="7" style="font-family: Roboto, sans-serif;" id="noidungupdateinput" class="forminput"></textarea>
+                                    <p class="error" id="noidungupdateerror"></p>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="center">
+                            <a class="greenbg formbutton" id="updatebutton" >Cập nhật</a>
+                            <a class="redbg formbutton" onclick="closeUpdateForm()">Hủy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="deleteform" style="display: none;">
+            <div id="formbackground">
+                <div id="center">
+                    <div id="formcontainer">
+                        <h2 id="formtitle">Thông báo</h2>
+                        <p id="deleteerror" class="error" style="text-align: center;"></p>
+                        <p style="padding: 10px 20px;">Chắc chắc xóa chuẩn đầu ra?</p>
+                        <input type="hidden" id="machuandelete">
+                        <div id="center">
+                            <a class="greenbg formbutton" id="deletebutton">Xóa</a>
+                            <a class="redbg formbutton" onclick="closeDeleteForm()">Hủy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function checkSearchForm(event){
+            if(document.getElementById('searchinput').value != ''){
+                return true;
+            }
+
+            return false;
+        }
+
+        function clearError(){
+            document.querySelectorAll('.error').forEach(err => {
+                err.innerHTML = '';
+            });
+        }
+
+        function clearInput(){
+            document.querySelectorAll('.forminput').forEach(forminput => {
+                forminput.value = '';
+            });
+        }
+
+        function openAddForm(){
+            clearError();
+            clearInput();
+            document.getElementById('addform').style.display = 'block';
+        }
+
+        function closeAddForm(){
+            document.getElementById('addform').style.display = 'none';
+        }
+
+        function openUpdateForm(machuan, noidung){
+            clearError();
+            document.getElementById('machuanupdateinput').value = machuan;
+            document.getElementById('noidungupdateinput').innerHTML = noidung;
+            document.getElementById('updateform').style.display = 'block';
+        }
+
+        function closeUpdateForm(){
+            document.getElementById('updateform').style.display = 'none';
+        }
+
+        let checkexist = false;
+        function chekAddForm(){
+            const machuan = document.getElementById('machuanaddinput').value;
+            const noidung = document.getElementById('noidungaddinput').value;
+
+            const machuanerror = document.getElementById('machuanadderror');
+            const noidungerror = document.getElementById('noidungadderror');
+
+            let error = true;
+
+            if(machuan == ''){
+                machuanerror.innerHTML = 'Vui lòng điền mã chuẩn';
+                error = false;
+            }else{
+                if(checkexist){
+                    machuanerror.innerHTML = 'Chuẩn đầu ra đã tồn tại';
+                    error = false;
+                }
+            }
+
+            if(noidung == ''){
+                noidungerror.innerHTML = 'Vui lòng điền nội dung';
+                error = false;
+            }
+
+            return error;
+        }
+
+        //Add chuan
+        document.getElementById('addbutton').addEventListener('click', function(){
+            clearError();
+            if(chekAddForm()){
+                const machuan = document.getElementById('machuanaddinput').value;
+                const noidung = document.getElementById('noidungaddinput').value;
+
+                const data = { machuan, noidung };
+
+                fetch('/chuandaura', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status){
+                        location.reload();
+                        document.getElementById('adderror').innerHTML = '';
+                    }else{
+                        document.getElementById('adderror').innerHTML = 'Thêm thất bại. Vui lòng thử lại'
+                    }
+                });
+            }
+        });
+
+        //Check exist add
+        document.getElementById('machuanaddinput').addEventListener('input', function(){
+            const data = {};
+            data.machuan = document.getElementById('machuanaddinput').value;
+            const machuanerror = document.getElementById('machuanadderror');
+
+            fetch('/chuandaura/checkexist', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(response => response.json())
+            .then(data => {
+                if(data.exist){
+                    machuanerror.innerHTML = 'Chuẩn đầu ra đã tồn tại';
+                    checkexist = true;
+                }else{
+                    checkexist = false;
+                    machuanerror.innerHTML = '';
+                }
+            });
+        })
+        
+        //Check update
+        function checkUpdateForm(){
+            const noidung = document.getElementById('noidungupdateinput').value;
+
+            const noidungerror = document.getElementById('noidungupdateerror');
+
+            let error = true;
+
+            if(noidung == ''){
+                noidungerror.innerHTML = 'Vui lòng điền nội dung';
+                error = false;
+            }
+
+            return error;
+        }
+
+        //Update chuan
+        document.getElementById('updatebutton').addEventListener('click', function(){
+            clearError();
+            if(checkUpdateForm()){
+                const machuan = document.getElementById('machuanupdateinput').value;
+                const noidung = document.getElementById('noidungupdateinput').value;
+
+                const data = { machuan, noidung };
+
+                fetch('/chuandaura', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status){
+                        location.reload();
+                        document.getElementById('updateerror').innerHTML = '';
+                    }else{
+                        document.getElementById('updateerror').innerHTML = 'Cập nhật thất bại. Vui lòng thử lại';
+                    }
+                });
+            }
+        });
+    
+        function openDeleteForm(machuan){
+            document.getElementById('deleteform').style.display = 'block';
+            document.getElementById('machuandelete').value = machuan;
+        }
+
+        function closeDeleteForm(){
+            document.getElementById('deleteform').style.display = 'none';
+        }
+    
+        document.getElementById('deletebutton').addEventListener('click', function(){
+            const machuan = document.getElementById('machuandelete').value;
+            const data = {machuan};
+
+            fetch('/chuandaura', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status){
+                    location.reload();
+                    document.getElementById('deleteerror').innerHTML = '';
+                }else{
+                    document.getElementById('deleteerror').innerHTML = 'Xóa thất bại. Vui lòng thử lại';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

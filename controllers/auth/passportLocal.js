@@ -5,13 +5,14 @@ const bcrypt = require('bcrypt');
 let initPassportLocal = (passport) => {
     passport.use(new LocalStrategy(
         function(username, password, done){
-            GiangVien.get(username)
+            GiangVien.get(username.toLowerCase())
                 .then(async (data) => {
                     if(data.rowCount > 0){
                         let giangvien = data.rows[0];
-                        
+
                         if(await bcrypt.compare(password, giangvien.matkhau)){
-                            done(null, { magiangvien: giangvien.magiangvien });
+                            const { magiangvien, hoten, admin} = giangvien;
+                            done(null, { magiangvien, hoten, admin });
                         }else{
                             done(null, false);
                         }

@@ -4,27 +4,136 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách chuẩn <%= data.rows[0].mahocphan %></title>
+    <title>Danh sách chuẩn</title>
 </head>
 <body>
-    <h1>Danh sách chuẩn đầu ra của học phần <%= data.rows[0].mahocphan %></h1>
+    <h1>Danh sách chuẩn đầu ra của học phần <span id="mahocphanspan"><%= mahocphan %></span></h1>
+    <button onclick="openUpdateForm()">Thêm chuẩn đầu ra</button>
     <% if (data.rowCount > 0) { %>
         <table border="1">
             <th>Mã chuẩn</th>
             <th>Nội dung chuẩn</th>
-            <th>Phần trăm mức điểm</th>
+            <th>Phần trăm sinh viên</th>
             <th>Ngưỡng điểm</th>
+            <th colspan="2">Hành động</th>
         <% data.rows.forEach((chitietchuan) => { %>
             <tr>
                 <td><%= chitietchuan.machuan %></td>
                 <td><%= chitietchuan.noidung %></td>
                 <td><%= chitietchuan.phantram %></td>
                 <td><%= chitietchuan.nguongdiem %></td>
+                <td><button onclick="openUpdateForm('<%= chitietchuan.machuan %>', '<%= chitietchuan.phantram %>','<%= chitietchuan.nguongdiem %>', )">Cập nhật</button></td>
+                <td><button onclick="openDeleteForm('<%= chitietchuan.machuan %>')">Xóa</button></td>
             </tr>
         <% }) %>
         </table>
     <% }else{ %>
         <p>Không có chuẩn đầu ra nào để hiển thị</p>
     <% } %>
+
+    <div id="updateform" style="display: none;">
+        <h1 id="updateformtitle"></h1>
+        <form action="" method="post">
+            <label for="phantramupdateforminput">Phần trăm sinh viên</label>
+            <input type="number" id="phantramupdateforminput"><br>
+            <label for="nguongdiemupdateformselect">Ngưỡng điểm</label>
+            <select id="nguongdiemupdateformselect"></select><br>
+            <input id="updateformsubmit" type="submit" value="Cập nhật">
+        </form>
+        <button onclick="closeUpdateForm()">Hủy</button>
+    </div>
+
+    <div id="deleteform" style="display: none;">
+        <a>Bạn có chắc muốn xóa chuẩn <span id="machuandeleteform"></span></a>
+        <button onclick="deleteChiTietChuan()">Xóa</button>
+        <button onclick="closeDeleteForm()">Hủy</button>
+    </div>
+
+    <script>
+        
+        const nguongdiemSelect = document.getElementById("nguongdiemupdateformselect");
+        fetch('/mucdiem/json')
+        .then(data => {
+            data.json()
+            .then(result => {
+                if(result.status){
+                    const nguongdiemList = result.data.rows;
+                    nguongdiemSelect.innerHTML = '';
+                    for(let i = 0; i < nguongdiemList.length; i++){
+                        let option = document.createElement('option');
+                        option.value = nguongdiemList[i].mamucdiem;
+                        option.innerHTML = nguongdiemList[i].nguongdiem;
+                        nguongdiemSelect.appendChild(option);
+                    }
+                }else{
+                    alert("Lỗi lấy mức điểm");
+                }
+            })
+        })
+
+        function openUpdateForm(machuan, phantram, nguongdiem){
+            document.getElementById('updateformtitle').innerHTML = machuan ? 'Cập nhật chuẩn ' + machuan : 'Thêm chuẩn đầu ra';
+            document.getElementById("machuanupdateforminput").innerHTML = machuan ?? '';
+            document.getElementById("phantramupdateforminput").value = phantram ?? 0;
+            nguongdiem ??= '9';
+
+            const optionList = document.querySelectorAll('option');
+            for(let i = 0; i < optionList.length; i++){
+                if(optionList[i].innerHTML == nguongdiem){
+                    optionList[i].selected = true;
+                }
+            }
+            
+            document.getElementById("updateform").style.display = 'block';
+        }
+
+        function closeUpdateForm(){
+            document.getElementById("updateform").style.display = 'none';
+        }
+
+        document.getElementById('updateformsubmit').addEventListener('click', function(event){
+            event.preventDefault();
+            const mahocphan = document.getElementById('mahocphanspan').innerHTML;
+            const machuan = document.getElementById('machuanspan').innerHTML;
+            const mamucdiem = document.getElementById('nguongdiemupdateformselect').value;
+            const phantram = document.getElementById('phantramupdateforminput').value;
+            const data = { mahocphan, machuan,mamucdiem, phantram }
+
+            fetch('/chitietchuan', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status){
+                    location.reload();
+                }else{
+                    alert("Cập nhật thất bại. Vui lòng thử lại");
+                }
+            });
+        })
+
+        function openDeleteForm(machuan){
+            document.getElementById('machuandeleteform').innerHTML = machuan;
+            document.getElementById('deleteform').style.display = 'block';
+        }
+
+        function closeDeleteForm(){
+            document.getElementById("deleteform").style.display = 'none';
+        }
+
+        function deleteChiTietChuan(){
+            const mahocphan = document.getElementById('mahocphanspan').innerHTML;
+            const machuan = document.getElementById('machuandeleteform').innerHTML;
+            const data = { mahocphan, machuan };
+
+            fetch('/chitietchuan', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status){
+                    location.reload();
+                }else{
+                    alert("Xóa thất bại. Vui lòng thử lại");
+                }
+            });
+        }
+    </script>
 </body>
 </html>

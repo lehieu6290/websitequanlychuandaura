@@ -40,39 +40,7 @@
     </nav>
 
     <main>
-    <!-- <h2 id="title">Danh sách lớp học phần</h2>
-        <% if(data.rowCount > 0){ %>
-            <table>
-            <tr>
-                <th>Mã lớp học phần</th>
-                <th>Tên học phần</th>
-                <th>Niên khóa</th>
-                <th colspan="3">Hành động</th>
-            </tr>
-            <% data.rows.forEach((lophocphan) => { %>
-                <tr>
-                <td><%= lophocphan.malophocphan %></td>
-                <td><%= lophocphan.tenhocphan %></td>
-                <td>HK <%= lophocphan.hocky %> <%= lophocphan.namhoc %></td>
-                <td>
-                    <a class="redbg" href="/lophocphan/diem/<%= lophocphan.idlophocphan %>">Nhập điểm</a>
-                    <a class="bluebg" href="/lophocphan/tylechuan/<%= lophocphan.idlophocphan %>">Nhập tỷ lệ chuẩn</a>
-                    <a class="greenbg" href="">Xem đánh giá</a>
-                </td>
-                </tr>
-            <% }) %>
-            </table>
-        <% }else{ %>
-            <p>Không có lớp học phần nào để hiển thị</p>
-        <% } %> -->
-    
         <h2 id="title">Danh sách lớp học phần</h2>
-        <div id="insertbuttoncontainer">
-            <form action="/lophocphan/search" method="POST" id="searchcontainer" onsubmit="return checkSearchForm()">
-                <input id="searchinput" name="malophocphan" type="text" placeholder="Nhập mã hoặc tên lớp học phần" autocomplete="off">
-                <button id="searchbutton">Tìm</button>
-            </form>
-        </div>
         <% if(data.length > 0){ %>
             <% data.forEach((group) => { %>
             <p id="hockytitle"><%= group.nienkhoa %></p>

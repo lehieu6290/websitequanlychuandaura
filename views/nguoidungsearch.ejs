@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm kiếm người dùng</title>
+    <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div id="avatar-container">
+            <div>
+                <img id="avatar" src="/public/images/avatar.png">
+                <div>
+                    <a href=""><p style="margin-bottom: 5px; font-weight: bold; font-size: 17px;"><%= hoten %></p></a>
+                    <% if(admin){%>
+                        <p>Quản trị viên</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div id="logout-container">
+                <a id="logout-button" href="/logout">
+                    <span>Đăng xuất</span>
+                    <img src="/public/images/logout.png">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <ul>
+            <li><a href="/">Trang chủ</a></li>
+            <li><a href="/lophocphan">Lớp học phần</a></li>
+            <% if(admin){%>
+            <li><a href="/hocphan">Chuẩn của các học phần</a></li>
+            <li><a href="/chuandaura">Chuẩn đầu ra</a></li>
+            <li><a href="/nguoidung" class="active">Người dùng</a></li>
+            <% } %>
+        </ul>
+    </nav>
+    <main>
+        <h2 id="title">Kết quả tìm kiếm</h2>
+        
+        <br>
+        <% if(data.rowCount > 0){ %>
+        <table id="list">
+            <tr>
+                <td>Mã giảng viên</td>
+                <td>Họ và tên</td>
+                <td>Email</td>
+                <td>Admin</td>
+                <td>Hành động</td>
+            </tr>
+            <%data.rows.forEach(giangvien => {%>
+                <tr>
+                    <td><%= giangvien.magiangvien.toUpperCase() %></td>
+                    <td><%= giangvien.hoten %></td>
+                    <td><%= giangvien.email %></td>
+                    <% if(giangvien.admin){ %>
+                        <td>Admin</td>
+                    <%}else{%>
+                        <td></td>
+                    <%}%>
+                    <% if(giangvien.magiangvien == magiangvien){ %>
+                        <td><p style="padding: 5px 0;">Đang đăng nhập</p></td>
+                    <%}else{%>
+                         <td>
+                            <a onclick="openUpdateForm('<%= giangvien.magiangvien.toUpperCase() %>', '<%= giangvien.hoten %>', '<%= giangvien.email %>', '<%= giangvien.admin %>')" class="greenbg">Cập nhật</a>
+                            <a onclick="openDeleteForm('<%= giangvien.magiangvien.toUpperCase() %>')" class="redbg">Xóa</a>
+                        </td>
+                    <%}%>
+                </tr>
+            <%})%>
+        </table>
+        <%}else{%>
+            <p style="text-align: center;">Không có giảng viên nào để hiển thị</p>
+        <%}%>
+
+        <div id="updateform" style="display: none;">
+            <div id="formbackground">
+                <div id="center">
+                    <div id="formcontainer">
+                        <h2 id="formtitle">Cập nhật thông tin giảng viên</h2>
+                        <p id="updateerror" class="error" style="text-align: center;"></p>
+                        <table id="formtable">
+                            <tr>
+                                <td><label for="magiangvienupdateinput">Mã giảng viên</label></td>
+                                <td><input type="text" id="magiangvienupdateinput" class="forminput" disabled></td>
+                            </tr>
+                            <tr>
+                                <td><label for="hotenupdateinput">Họ và tên</label></td>
+                                <td>
+                                    <input type="text" id="hotenupdateinput" class="forminput">
+                                    <p class="error" id="hotenupdateerror"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="emailupdateinput">Email</label></td>
+                                <td>
+                                    <input type="text" id="emailupdateinput" class="forminput">
+                                    <p class="error" id="emailupdateerror"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="adminupdateinput">Admin</label></td>
+                                <td><input type="checkbox" id="adminupdateinput" ></td>
+                            </tr>
+                            <tr>
+                                <td><label for="matkhauupdateinput">Mật khẩu mới</label></td>
+                                <td><input type="matkhau" id="matkhauupdateinput" class="forminput"></td>
+                            </tr>
+                        </table>
+                        <div id="center">
+                            <a class="greenbg formbutton" id="updatebutton">Cập nhật</a>
+                            <a class="redbg formbutton" onclick="closeUpdateForm()">Hủy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="deleteform" style="display: none;">
+            <div id="formbackground">
+                <div id="center">
+                    <div id="formcontainer">
+                        <h2 id="formtitle">Thông báo</h2>
+                        <p id="deleteerror" class="error" style="text-align: center;"></p>
+                        <p style="padding: 10px 20px;">Chắc chắc xóa giảng viên?</p>
+                        <input type="hidden" id="magiangviendelete">
+                        <div id="center">
+                            <a class="greenbg formbutton" id="deletebutton">Xóa</a>
+                            <a class="redbg formbutton" onclick="closeDeleteForm()">Hủy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function clearError(){
+            document.querySelectorAll('.error').forEach(err => {
+                err.innerHTML = '';
+            });
+        }
+
+        function openUpdateForm(magiangvien, hoten, email, admin){
+            clearError();
+            document.getElementById('magiangvienupdateinput').value = magiangvien;
+            document.getElementById('hotenupdateinput').value = hoten;
+            document.getElementById('emailupdateinput').value = email;
+            if(admin == 'true'){
+                document.getElementById('adminupdateinput').checked = true;
+            }else{
+                document.getElementById('adminupdateinput').checked = false;
+            }
+            document.getElementById('updateform').style.display = 'block';
+        }
+
+        function closeUpdateForm(){
+            document.getElementById('updateform').style.display = 'none';
+        }
+
+        function checkUpdateForm(){
+            const hoten = document.getElementById('hotenupdateinput').value;
+            const email = document.getElementById('emailupdateinput').value;
+
+            const hotenadderror = document.getElementById('hotenupdateerror');
+            const emailadderror = document.getElementById('emailupdateerror');
+
+            let error = true;
+
+            if(hoten == ''){
+                hotenadderror.innerHTML = 'Vui lòng điền họ và tên';
+                error = false;
+            }
+
+            if(email == ''){
+                emailadderror.innerHTML = 'Vui lòng điền email';
+                error = false;
+            }else{
+                if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email) == false){
+                    emailadderror.innerHTML = 'Email không hợp lệ';
+                    error = false;
+                }
+            }
+
+            return error;
+        }
+
+        document.getElementById('updatebutton').addEventListener('click', function(){
+            clearError();
+            if(checkUpdateForm()){
+                const magiangvien = document.getElementById('magiangvienupdateinput').value;
+                const hoten = document.getElementById('hotenupdateinput').value;
+                const email = document.getElementById('emailupdateinput').value;
+                const admin = document.getElementById('adminupdateinput').checked;
+                const matkhau = document.getElementById('matkhauupdateinput').value;
+
+                const data = { magiangvien, hoten, email, admin, matkhau };
+
+                fetch('/nguoidung', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status){
+                        location.reload();
+                        document.getElementById('updateerror').innerHTML = '';
+                    }else{
+                        document.getElementById('updateerror').innerHTML = 'Cập nhật thất bại. Vui lòng thử lại';
+                    }
+                });
+            }
+        });
+
+        function openDeleteForm(magiangvien){
+            document.getElementById('deleteform').style.display = 'block';
+            document.getElementById('magiangviendelete').value = magiangvien;
+        }
+
+        function closeDeleteForm(){
+            document.getElementById('deleteform').style.display = 'none';
+        }
+    
+        document.getElementById('deletebutton').addEventListener('click', function(){
+            const magiangvien = document.getElementById('magiangviendelete').value;
+            const data = {magiangvien};
+
+            fetch('/nguoidung', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status){
+                    location.reload();
+                    document.getElementById('deleteerror').innerHTML = '';
+                }else{
+                    document.getElementById('deleteerror').innerHTML = 'Xóa thất bại. Vui lòng thử lại';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -5,6 +5,8 @@ const diemController =  require('../controllers/diemController');
 const tylechuanController = require('../controllers/tylechuanController');
 
 router.get('/', lophocphanController.renderLopHocPhanListView);
+router.post('/search', lophocphanController.searchLopHocPhan);
+
 router.get('/diem/:idlophocphan', diemController.renderDiemLisView);
 router.get('/tylechuan/:idlophocphan', tylechuanController.renderTyLeChuanLisView);
 router.post('/tylechuan', tylechuanController.insertTyLeChuan);
