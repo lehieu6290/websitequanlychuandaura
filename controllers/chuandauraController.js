@@ -32,6 +32,19 @@ module.exports = {
         }
     },
 
+    searchAPI(req, res){
+        if(req.isAuthenticated()){
+            const {machuan} = req.body;
+            ChuanDauRa.searchAPI(machuan)
+            .then(data => {
+                res.json({status: true, list: data.rows});
+            })
+            .catch(() => {
+                res.json({status: false});
+            })
+        }
+    },
+
     checkExistChuanDauRa(req, res){
         const {machuan} = req.body;
         ChuanDauRa.get(machuan.toUpperCase())

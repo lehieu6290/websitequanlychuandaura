@@ -29,11 +29,12 @@
         </div>
         <hr>
         <ul>
-            <li><a href="/">Trang chủ</a></li>
+            <!-- <li><a href="/">Trang chủ</a></li> -->
             <li><a href="/lophocphan">Lớp học phần</a></li>
-            <% if(admin){%>
+            
             <li><a href="/hocphan" class="active">Chuẩn của các học phần</a></li>
             <li><a href="/chuandaura">Chuẩn đầu ra</a></li>
+            <% if(admin){%>
             <li><a href="/nguoidung">Người dùng</a></li>
             <% } %>
         </ul>
@@ -50,9 +51,9 @@
         <% if (data.rowCount > 0) { %>
             <table id="list">
                 <tr>
-                    <td class="col1">Mã học phần</td>
-                    <td class="col3">Tên học phần</td>
-                    <td>Hành động</td>
+                    <th class="col1">Mã học phần</th>
+                    <th class="col3">Tên học phần</th>
+                    <th>Hành động</th>
                 </tr>
             <% data.rows.forEach((hocphan) => { %>
                 <tr>

@@ -114,7 +114,7 @@ main #list{
 }
 
 #list tr:nth-child(even){
-    background-color: rgb(140, 198, 255);
+    background-color: rgb(169, 210, 250);
 }
 
 #list tr:nth-child(odd){
@@ -123,6 +123,11 @@ main #list{
 
 #list tr:first-child{
     background-color: rgb(190, 190, 190);
+}
+
+#list input{
+    padding: 5px;
+    font-size: 16px;
 }
 
 #hockytitle {
@@ -172,6 +177,10 @@ a.greenbg:hover{
     width: 65%;
 }
 
+.col4{
+    width: 30%;
+}
+
 /*Insert, Search Bar*/
 #insertbuttoncontainer{
     display: flex;
@@ -183,7 +192,7 @@ a.greenbg:hover{
     font-size: 16px;
     background-color: rgb(36, 214, 66);
     border: none;
-    padding: 10px;
+    padding: 7px 10px;
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
@@ -195,13 +204,22 @@ a.greenbg:hover{
 
 #insertbuttoncontainer input{
     font-size: 16px;
-    padding: 10px;
+    padding: 7px;
     border-radius: 5px;
     width: 250px;
 }
 
 #searchcontainer{
     margin-left: 40px;
+}
+
+#insertbuttoncontainer a{
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    padding: 7px;
+    margin-left: 30px;
+    border-radius: 5px;
 }
 
 /*Form Modal*/
@@ -248,6 +266,11 @@ a.greenbg:hover{
     padding: 10px;
 }
 
+#formtable select{
+    padding: 5px;
+    font-size: 16px;
+}
+
 .formbutton{
     font-size: 16px;
     padding: 10px;
@@ -262,4 +285,117 @@ a.greenbg:hover{
 .error{
     color: red;
     padding-top: 5px;
+}
+
+/*Search result*/
+.searchresult{
+    width: 300px;
+    position: absolute;
+    top: 45px;
+    left: 10px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px grey;
+}
+
+.searchitem{
+    padding: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.searchitem:hover{
+    padding: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: rgb(163, 163, 163);
+    cursor: pointer;
+}
+
+.canvasjs-chart-credit{
+    display: none;
+}
+
+.canvasjs-chart-toolbar{
+    display: none;
+}
+
+#tongsodiem{
+    display: inline-block;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px silver;
+    margin-bottom: 10px;
+}
+
+#tongsodiem h2{
+    display: inline-block;
+}
+
+/*Login*/
+#loginbody{
+    background-image: url('./images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: -100px;
+}
+
+#overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(29, 29, 29, 0.4);
+    z-index: -1;
+}
+
+#loginbody #center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loginbody #title{
+    text-align: center;
+    color: #fff;
+    padding: 50px;
+    /* background-color: rgb(42, 148, 255); */
+}
+
+#loginbody #form{
+    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 70px;
+    padding: 20px;
+}
+
+#loginbody #form input{
+    font-size: 16px;
+    padding: 7px;
+}
+
+#loginbody #form td{
+    padding: 7px;
+}
+
+#loginbody #form h1{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#loginbody #form button{
+    border-radius: 5px;
+    border: none;
+    padding: 7px;
+    background-color: rgb(29, 108, 255);
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#loginbody #form button:hover{
+    background-color: rgb(5, 78, 212);
 }

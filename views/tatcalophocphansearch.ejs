@@ -50,16 +50,17 @@
                 <th class="col1">Mã lớp học phần</th>
                 <th class="col2">Tên học phần</th>
                 <!-- <th>Niên khóa</th> -->
+                <th>Mã giảng viên</th>
                 <th>Hành động</th>
             </tr>
             <% group.lophocphan.forEach((lophocphan) => { %>
                 <tr>
                 <td><%= lophocphan.malophocphan %></td>
                 <td><%= lophocphan.tenhocphan %></td>
+                
                 <!-- <td>HK <%= lophocphan.hocky %> <%= lophocphan.namhoc %></td> -->
+                <td><%= lophocphan.magiangvien.toUpperCase() %></td>
                 <td>
-                    <a class="yellowbg" href="/lophocphan/diem/<%= lophocphan.idlophocphan %>">Nhập điểm</a>
-                    <!-- <a class="yellowbg" href="/lophocphan/tylechuan/<%= lophocphan.idlophocphan %>">Nhập tỷ lệ chuẩn</a> -->
                     <a class="greenbg" href="">Xem đánh giá</a>
                 </td>
                 </tr>

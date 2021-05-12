@@ -7,4 +7,10 @@ MucDiem.getAll = () => {
     return db.query(queryString);
 }
 
+MucDiem.get = (mamucdiem) => {
+    const queryString = "SELECT * FROM MucDiem WHERE mamucdiem=$1";
+    const params = [mamucdiem]
+    return db.query(queryString, params);
+}
+
 module.exports = MucDiem;

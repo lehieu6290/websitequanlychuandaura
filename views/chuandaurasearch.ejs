@@ -29,11 +29,12 @@
         </div>
         <hr>
         <ul>
-            <li><a href="/">Trang chủ</a></li>
+            <!-- <li><a href="/">Trang chủ</a></li> -->
             <li><a href="/lophocphan">Lớp học phần</a></li>
-            <% if(admin){%>
+            
             <li><a href="/hocphan">Chuẩn của các học phần</a></li>
             <li><a href="/chuandaura" class="active">Chuẩn đầu ra</a></li>
+            <% if(admin){%>
             <li><a href="/nguoidung">Người dùng</a></li>
             <% } %>
         </ul>
@@ -45,18 +46,22 @@
         <% if(data.rowCount > 0){ %>
         <table id="list">
             <tr>
-                <td>Mã chuẩn</td>
-                <td>Nội dung</td>
-                <td>Hành động</td>
+                <th>Mã chuẩn</th>
+                <th>Nội dung</th>
+                <% if(admin){%>
+                <th>Hành động</th>
+                <% } %>
             </tr>
             <%data.rows.forEach(chuandaura => {%>
                 <tr>
                     <td><%= chuandaura.machuan %></td>
                     <td><%= chuandaura.noidung %></td>
+                    <% if(admin){%>
                     <td>
                         <a onclick="openUpdateForm('<%= chuandaura.machuan %>', '<%= chuandaura.noidung %>')" class="greenbg">Cập nhật</a>
                         <a onclick="openDeleteForm('<%= chuandaura.machuan %>')" class="redbg">Xóa</a>
                     </td>
+                    <% } %>
                 </tr>
             <%})%>
         </table>

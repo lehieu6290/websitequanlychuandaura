@@ -4,54 +4,359 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách chuẩn</title>
+    <title>Danh sách chuẩn đầu ra</title>
+    <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
-    <h1>Danh sách chuẩn đầu ra của học phần <span id="mahocphanspan"><%= mahocphan %></span></h1>
-    <button onclick="openUpdateForm()">Thêm chuẩn đầu ra</button>
-    <% if (data.rowCount > 0) { %>
-        <table border="1">
-            <th>Mã chuẩn</th>
-            <th>Nội dung chuẩn</th>
-            <th>Phần trăm sinh viên</th>
-            <th>Ngưỡng điểm</th>
-            <th colspan="2">Hành động</th>
-        <% data.rows.forEach((chitietchuan) => { %>
-            <tr>
-                <td><%= chitietchuan.machuan %></td>
-                <td><%= chitietchuan.noidung %></td>
-                <td><%= chitietchuan.phantram %></td>
-                <td><%= chitietchuan.nguongdiem %></td>
-                <td><button onclick="openUpdateForm('<%= chitietchuan.machuan %>', '<%= chitietchuan.phantram %>','<%= chitietchuan.nguongdiem %>', )">Cập nhật</button></td>
-                <td><button onclick="openDeleteForm('<%= chitietchuan.machuan %>')">Xóa</button></td>
-            </tr>
-        <% }) %>
-        </table>
-    <% }else{ %>
-        <p>Không có chuẩn đầu ra nào để hiển thị</p>
-    <% } %>
+    <nav id="navbar">
+        <div id="avatar-container">
+            <div>
+                <img id="avatar" src="/public/images/avatar.png">
+                <div>
+                    <a href=""><p style="margin-bottom: 5px; font-weight: bold; font-size: 17px;"><%= hoten %></p></a>
+                    <% if(admin){%>
+                        <p>Quản trị viên</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div id="logout-container">
+                <a id="logout-button" href="/logout">
+                    <span>Đăng xuất</span>
+                    <img src="/public/images/logout.png">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <ul>
+            <!-- <li><a href="/">Trang chủ</a></li> -->
+            <li><a href="/lophocphan">Lớp học phần</a></li>
+            
+            <li><a href="/hocphan" class="active">Chuẩn của các học phần</a></li>
+            <li><a href="/chuandaura">Chuẩn đầu ra</a></li>
+            <% if(admin){%>
+            <li><a href="/nguoidung">Người dùng</a></li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <main>
+        <h2 id="title">Danh sách chuẩn đầu ra của học phần <span id="mahocphanspan"><%= mahocphan %></span></h2>
+        <% if(admin){%>
+        <div id="insertbuttoncontainer">
+            <button onclick="openAddForm('<%= mahocphan %>')">Thêm chuẩn đầu ra</button>
+            <!-- <form action="/nguoidung/search" method="POST" id="searchcontainer" onsubmit="return checkSearchForm()">
+                <input id="searchinput" name="namesearch" type="text" placeholder="Nhập mã hoặc tên giảng viên" autocomplete="off">
+                <button id="searchbutton">Tìm</button>
+            </form> -->
+        </div>
+        <% }else{ %>
+            <br>
+        <%}%>
+        <% if (data.rowCount > 0) { %>
+        <% var list = data.rows; %>
+            <table id="list">
+                <th>Mã chuẩn</th>
+                <th>Nội dung chuẩn</th>
+                <th style="text-align: center;">Phần trăm sinh viên</th>
+                <th style="text-align: center;">Ngưỡng điểm</th>
+                <% if(admin){%>
+                <th colspan="2">Hành động</th>
+                <%}%>
+            <% data.rows.forEach((chitietchuan) => { %>
+                <tr>
+                    <td><%= chitietchuan.machuan %></td>
+                    <td><%= chitietchuan.noidung %></td>
+                    <td style="text-align: center;"><%= chitietchuan.phantram %></td>
+                    <td style="text-align: center;"><%= chitietchuan.nguongdiem %></td>
+                    <% if(admin){%>
+                    <td>
+                        <a class="greenbg" onclick="openUpdateForm('<%= mahocphan %>', '<%= chitietchuan.machuan %>', '<%= chitietchuan.phantram %>','<%= chitietchuan.nguongdiem %>')">Cập nhật</a>
+                        <a class="redbg" onclick="openDeleteForm('<%= mahocphan %>', '<%= chitietchuan.machuan %>')">Xóa</a>
+                    </td>
+                    <%}%>
+                </tr>
+            <% }) %>
+            </table>
+        <% }else{ %>
+            <p style="text-align: center;">Không có chuẩn đầu ra nào để hiển thị</p>
+        <% } %>
+    
+    </main>
+
+    <div id="addform" style="display: none;">
+        <div id="formbackground">
+            <div id="center">
+                <div id="formcontainer">
+                    <h2 id="formtitle">Thêm chuẩn đầu ra cho <span id="mahocphantitle"></span></h2>
+                    <p id="adderror" class="error" style="text-align: center;"></p>
+                    <input type="hidden" id="mahocphanaddinput" value="<%= mahocphan%>">
+                    <table id="formtable">
+                        <tr>
+                            <td><label for="machuanaddinput">Mã chuẩn</label></td>
+                            <td style="position: relative;">
+                                <input type="text" id="machuanaddinput" class="forminput" autocomplete="off">
+                                <p class="error" id="machuanadderror"></p>
+                                <div id="searchaddresult" class="searchresult"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="phatranmaddinput">Phần trăm sinh viên</label></td>
+                            <td>
+                                <input type="number" id="phantramaddinput" class="forminput" min="0" max="100">
+                                <p class="error" id="phantramadderror"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="emailaddinput">Ngưỡng điểm</label></td>
+                            <td>
+                                <select id="nguongdiemaddinput"></select>
+                                <!-- <input type="text" id="emailaddinput" class="forminput">
+                                <p class="error" id="emailadderror"></p> -->
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="center">
+                        <a class="greenbg formbutton" id="addbutton">Thêm</a>
+                        <a class="redbg formbutton" onclick="closeAddForm()">Hủy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="updateform" style="display: none;">
-        <h1 id="updateformtitle"></h1>
-        <form action="" method="post">
-            <label for="phantramupdateforminput">Phần trăm sinh viên</label>
-            <input type="number" id="phantramupdateforminput"><br>
-            <label for="nguongdiemupdateformselect">Ngưỡng điểm</label>
-            <select id="nguongdiemupdateformselect"></select><br>
-            <input id="updateformsubmit" type="submit" value="Cập nhật">
-        </form>
-        <button onclick="closeUpdateForm()">Hủy</button>
+        <div id="formbackground">
+            <div id="center">
+                <div id="formcontainer">
+                    <h2 id="formtitle">Cập nhật chuẩn đầu ra</h2>
+                    <p id="updateerror" class="error" style="text-align: center;"></p>
+                    <input type="hidden" id="mahocphanupdateinput" value="<%= mahocphan%>">
+                    <table id="formtable">
+                        <tr>
+                            <td><label for="machuanupdateinput">Mã chuẩn</label></td>
+                            <td style="position: relative;">
+                                <input type="text" id="machuanupdateinput" class="forminput" autocomplete="off" disabled>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="phatranmupdateinput">Phần trăm sinh viên</label></td>
+                            <td>
+                                <input type="number" id="phantramupdateinput" class="forminput" min="0" max="100">
+                                <p class="error" id="phantramupdateerror"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="nguongdiemupdateinput">Ngưỡng điểm</label></td>
+                            <td>
+                                <select id="nguongdiemupdateinput"></select>
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="center">
+                        <a class="greenbg formbutton" id="updatebutton">Cập nhật</a>
+                        <a class="redbg formbutton" onclick="closeUpdateForm()">Hủy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="deleteform" style="display: none;">
-        <a>Bạn có chắc muốn xóa chuẩn <span id="machuandeleteform"></span></a>
-        <button onclick="deleteChiTietChuan()">Xóa</button>
-        <button onclick="closeDeleteForm()">Hủy</button>
+        <div id="formbackground">
+            <div id="center">
+                <div id="formcontainer">
+                    <h2 id="formtitle">Thông báo</h2>
+                    <p id="deleteerror" class="error" style="text-align: center;"></p>
+                    <p style="padding: 10px 20px;">Chắc chắc xóa chuẩn đầu ra?</p>
+                    <input type="hidden" id="machuandelete">
+                    <input type="hidden" id="mahocphandelete">
+                    <div id="center">
+                        <a class="greenbg formbutton" id="deletebutton">Xóa</a>
+                        <a class="redbg formbutton" onclick="closeDeleteForm()">Hủy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        function clearError(){
+            document.querySelectorAll('.error').forEach(err => {
+                err.innerHTML = '';
+            });
+        }
+
+        function clearInput(){
+            document.querySelectorAll('.forminput').forEach(forminput => {
+                forminput.value = '';
+            });
+        }
+
+        function openAddForm(mahocphan){
+            clearError();
+            clearInput();
+            document.getElementById('mahocphantitle').innerHTML = mahocphan;
+            document.getElementById('searchaddresult').innerHTML = '';
+
+            const nguongdiemaddinput = document.getElementById('nguongdiemaddinput');
+            fetch('/mucdiem/json')
+            .then(data => {
+                data.json()
+                .then(result => {
+                    if(result.status){
+                        const nguongdiemList = result.data.rows;
+                        nguongdiemaddinput.innerHTML = '';
+                        for(let i = 0; i < nguongdiemList.length; i++){
+                            let option = document.createElement('option');
+                            option.value = nguongdiemList[i].mamucdiem;
+                            option.innerHTML = nguongdiemList[i].nguongdiem;
+                            nguongdiemaddinput.appendChild(option);
+                        }
+                    }else{
+                        alert("Lỗi lấy mức điểm");
+                    }
+                })
+            })
+            document.getElementById('addform').style.display = 'block';
+        }
+
+        function closeAddForm(){
+            document.getElementById('addform').style.display = 'none';
+        }
+
+        let checkMaChuan = false;
+        let checkExistMaChuan = false;
+        function chekAddForm(){
+            const machuan = document.getElementById('machuanaddinput').value;
+            const phantram = document.getElementById('phantramaddinput').value;
+
+            const machuanerror = document.getElementById('machuanadderror');
+            const phantramerror = document.getElementById('phantramadderror');
+
+            let error = true;
+            if(machuan == ''){
+                machuanerror.innerHTML = 'Vui lòng điền mã chuẩn';
+                error = false;
+            }else{
+                if(!checkMaChuan){
+                    machuanerror.innerHTML = 'Mã chuẩn không hợp lệ';
+                    error = false;
+                }
+            }
+
+            if(phantram == ''){
+                phantramerror.innerHTML = 'Vui lòng điền phần trăm';
+                error = false;
+            }else{
+                if(parseInt(phantram) <= 0 || parseInt(phantram) > 100){
+                    phantramerror.innerHTML = 'Phần trăm phải > 0 và <= 100';
+                    error = false;
+                }
+            }
+
+            if(checkExistChuan()){
+                document.getElementById('machuanadderror').innerHTML = 'Mã chuẩn này đã được thêm';
+                error = false;
+            }
+
+            return error;
+        }
+
+        function checkExistChuan(){
+            const machuan = document.getElementById('machuanaddinput').value;
+            
+            '<% data.rows.forEach(chuan => {%>'
+                console.log('<%= chuan.machuan %>' == machuan.toUpperCase())
+                if(machuan.toUpperCase() == '<%= chuan.machuan %>'){
+                    document.getElementById('machuanadderror').innerHTML = 'Mã chuẩn này đã được thêm';
+                    return true;
+                }
+            '<%}) %>'
+
+            return false;
+        }
+
+        document.getElementById('machuanaddinput').addEventListener('input', function(){
+            const machuan = document.getElementById('machuanaddinput').value;
+            const searchaddresult = document.getElementById('searchaddresult');
+            const data = { machuan };
+            
+            searchaddresult.innerHTML = '';
+            if(machuan != ''){
+                fetch('/chuandaura/search/json', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status){
+                        if(data.list.length > 0){
+                            for(let i = 0; i < data.list.length; i++){
+                                const p = document.createElement('p');
+                               
+                                p.innerHTML = data.list[i].machuan + " - " + data.list[i].noidung;
+                                p.className = 'searchitem';
+                                searchaddresult.appendChild(p);
+                            }
+                            
+                            if(data.list.length == 1 && data.list[0].machuan == machuan.toUpperCase()){
+                                checkMaChuan = true;
+                                document.getElementById('machuanadderror').innerHTML = '';
+                            }else{
+                                checkMaChuan = false;
+                            }
+                        }else{
+                            const machuanerror = document.getElementById('machuanadderror');
+                            machuanerror.innerHTML = 'Mã chuẩn không hợp lệ';
+                            checkMaChuan = false;
+                        }
+                    }else{
+                        alert("Lỗi gọi API. Vui lòng thử lại");
+                    }
+                });
+            }
+        });
+
+        document.getElementById('addbutton').addEventListener('click', function(){
+            clearError();
+            if(chekAddForm()){
+                const machuan = document.getElementById('machuanaddinput').value;
+                const mahocphan = document.getElementById('mahocphanaddinput').value;
+                const phantram = document.getElementById('phantramaddinput').value;
+                const mamucdiem = document.getElementById('nguongdiemaddinput').value;
+
+                const data = { mahocphan, machuan, mamucdiem, phantram };
+
+                fetch('/chitietchuan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status){
+                        location.reload();
+                        document.getElementById('adderror').innerHTML = '';
+                    }else{
+                        document.getElementById('adderror').innerHTML = 'Thêm thất bại. Vui lòng thử lại'
+                    }
+                });
+            }
+        });
+
+        document.getElementById('machuanaddinput').addEventListener('focusout', function(){
+            if(checkMaChuan){
+                document.getElementById('searchaddresult').innerHTML = '';
+            }
+        })
         
-        const nguongdiemSelect = document.getElementById("nguongdiemupdateformselect");
+        document.addEventListener('click', function(e){
+            if(e.target && e.target.className == 'searchitem'){
+                const value = e.target.innerHTML;
+                const stringSplited = value.split("-");
+                document.getElementById('machuanaddinput').value = stringSplited[0].trim();  
+                document.getElementById('machuanadderror').innerHTML = '';
+                document.getElementById('searchaddresult').innerHTML = '';
+                checkMaChuan = true;            
+            }
+        });
+
+        /*Update section*/
+        const nguongdiemSelect = document.getElementById("nguongdiemupdateinput");
         fetch('/mucdiem/json')
         .then(data => {
             data.json()
@@ -71,11 +376,11 @@
             })
         })
 
-        function openUpdateForm(machuan, phantram, nguongdiem){
-            document.getElementById('updateformtitle').innerHTML = machuan ? 'Cập nhật chuẩn ' + machuan : 'Thêm chuẩn đầu ra';
-            document.getElementById("machuanupdateforminput").innerHTML = machuan ?? '';
-            document.getElementById("phantramupdateforminput").value = phantram ?? 0;
-            nguongdiem ??= '9';
+        function openUpdateForm(mahocphan, machuan, phantram, nguongdiem){
+            clearError();
+            document.getElementById('mahocphanupdateinput').value = mahocphan;
+            document.getElementById('machuanupdateinput').value = machuan;
+            document.getElementById('phantramupdateinput').value = phantram;
 
             const optionList = document.querySelectorAll('option');
             for(let i = 0; i < optionList.length; i++){
@@ -83,57 +388,86 @@
                     optionList[i].selected = true;
                 }
             }
-            
-            document.getElementById("updateform").style.display = 'block';
+
+            document.getElementById('updateform').style.display = 'block';
         }
 
         function closeUpdateForm(){
-            document.getElementById("updateform").style.display = 'none';
+            document.getElementById('updateform').style.display = 'none';
         }
 
-        document.getElementById('updateformsubmit').addEventListener('click', function(event){
-            event.preventDefault();
-            const mahocphan = document.getElementById('mahocphanspan').innerHTML;
-            const machuan = document.getElementById('machuanspan').innerHTML;
-            const mamucdiem = document.getElementById('nguongdiemupdateformselect').value;
-            const phantram = document.getElementById('phantramupdateforminput').value;
-            const data = { mahocphan, machuan,mamucdiem, phantram }
+        function chekUpdateForm(){
+            const phantram = document.getElementById('phantramupdateinput').value;
 
-            fetch('/chitietchuan', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-            .then(response => response.json())
-            .then(data => {
-                if(data.status){
-                    location.reload();
-                }else{
-                    alert("Cập nhật thất bại. Vui lòng thử lại");
+            const phantramerror = document.getElementById('phantramupdateerror');
+
+            let error = true;
+
+            if(phantram == ''){
+                phantramerror.innerHTML = 'Vui lòng điền phần trăm';
+                error = false;
+            }else{
+                if(parseInt(phantram) <= 0 || parseInt(phantram) > 100){
+                    phantramerror.innerHTML = 'Phần trăm phải > 0 và <= 100';
+                    error = false;
                 }
-            });
-        })
+            }
 
-        function openDeleteForm(machuan){
-            document.getElementById('machuandeleteform').innerHTML = machuan;
+            return error;
+        }
+
+        document.getElementById('updatebutton').addEventListener('click', function(){
+            clearError();
+            if(chekUpdateForm()){
+                const machuan = document.getElementById('machuanupdateinput').value;
+                const mahocphan = document.getElementById('mahocphanupdateinput').value;
+                const phantram = document.getElementById('phantramupdateinput').value;
+                const mamucdiem = document.getElementById('nguongdiemupdateinput').value;
+
+                const data = { mahocphan, machuan, mamucdiem, phantram };
+
+                fetch('/chitietchuan', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status){
+                        location.reload();
+                        document.getElementById('updateerror').innerHTML = '';
+                    }else{
+                        document.getElementById('updateerror').innerHTML = 'Cập nhật thất bại. Vui lòng thử lại'
+                    }
+                });
+            }
+        });
+        
+        /*Delete section*/
+        function openDeleteForm(mahocphan, machuan){
             document.getElementById('deleteform').style.display = 'block';
+            document.getElementById('machuandelete').value = machuan;
+            document.getElementById('mahocphandelete').value = mahocphan;
         }
 
         function closeDeleteForm(){
-            document.getElementById("deleteform").style.display = 'none';
+            document.getElementById('deleteform').style.display = 'none';
         }
 
-        function deleteChiTietChuan(){
-            const mahocphan = document.getElementById('mahocphanspan').innerHTML;
-            const machuan = document.getElementById('machuandeleteform').innerHTML;
-            const data = { mahocphan, machuan };
+        document.getElementById('deletebutton').addEventListener('click', function(){
+            const machuan = document.getElementById('machuandelete').value;
+            const mahocphan = document.getElementById('mahocphandelete').value;
+            const data = { mahocphan, machuan};
 
             fetch('/chitietchuan', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
             .then(response => response.json())
             .then(data => {
                 if(data.status){
                     location.reload();
+                    document.getElementById('deleteerror').innerHTML = '';
                 }else{
-                    alert("Xóa thất bại. Vui lòng thử lại");
+                    document.getElementById('deleteerror').innerHTML = 'Xóa thất bại. Vui lòng thử lại';
                 }
             });
-        }
+        });
+
+
     </script>
 </body>
 </html>

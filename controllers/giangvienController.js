@@ -5,13 +5,16 @@ module.exports ={
         if(req.isAuthenticated()){
             res.redirect('/');
         }else{
-            res.render('login');
+            const {error} = req.query;
+            
+            res.render('login', {error});
         }
     },
 
     renderIndexView(req, res){
         if(req.isAuthenticated()){
-            res.render('index', { hoten: req.user.hoten, admin: req.user.admin });
+            res.redirect('/lophocphan')
+            // res.render('index', { hoten: req.user.hoten, admin: req.user.admin });
         }else{
             res.redirect('login');
         }
@@ -20,7 +23,7 @@ module.exports ={
     login(req, res, next){
         passport.authenticate('local', function(err, user, info) {
             if (err) { return next(err); }
-            if (!user) { return res.redirect('/login'); }
+            if (!user) { return res.redirect('/login?error=true'); }
             req.logIn(user, function(err) {
                 if (err) { return next(err); }
                 return res.redirect('/');

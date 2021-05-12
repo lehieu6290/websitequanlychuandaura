@@ -7,6 +7,11 @@ ChuanDauRa.search = (machuan) => {
     return db.query(queryString);
 }
 
+ChuanDauRa.searchAPI = (machuan) => {
+    const queryString = "SELECT * FROM ChuanDauRa WHERE machuan LIKE '%"+ machuan.toUpperCase() +"%'";
+    return db.query(queryString);
+}
+
 ChuanDauRa.getAll = () => {
     let queryString = "SELECT * FROM ChuanDauRa ORDER BY machuan";
     return db.query(queryString);

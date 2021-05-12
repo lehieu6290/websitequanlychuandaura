@@ -29,11 +29,12 @@
         </div>
         <hr>
         <ul>
-            <li><a href="/">Trang chủ</a></li>
+            <!-- <li><a href="/">Trang chủ</a></li> -->
             <li><a href="/lophocphan" class="active">Lớp học phần</a></li>
-            <% if(admin){%>
+            
             <li><a href="/hocphan">Chuẩn của các học phần</a></li>
             <li><a href="/chuandaura">Chuẩn đầu ra</a></li>
+            <% if(admin){%>
             <li><a href="/nguoidung">Người dùng</a></li>
             <% } %>
         </ul>
@@ -71,6 +72,7 @@
             <form action="/lophocphan/search" method="POST" id="searchcontainer" onsubmit="return checkSearchForm()">
                 <input id="searchinput" name="malophocphan" type="text" placeholder="Nhập mã hoặc tên lớp học phần" autocomplete="off">
                 <button id="searchbutton">Tìm</button>
+                <a href="/tatcalophocphan" class="greenbg">Các lớp học phần khác</a>
             </form>
         </div>
         <% if(data.length > 0){ %>
@@ -78,10 +80,10 @@
             <p id="hockytitle"><%= group.nienkhoa %></p>
             <table id="list">
             <tr>
-                <td class="col1">Mã lớp học phần</td>
-                <td class="col2">Tên học phần</td>
+                <th class="col1">Mã lớp học phần</th>
+                <th class="col2">Tên học phần</th>
                 <!-- <th>Niên khóa</th> -->
-                <td>Hành động</td>
+                <th>Hành động</th>
             </tr>
             <% group.lophocphan.forEach((lophocphan) => { %>
                 <tr>
@@ -89,9 +91,9 @@
                 <td><%= lophocphan.tenhocphan %></td>
                 <!-- <td>HK <%= lophocphan.hocky %> <%= lophocphan.namhoc %></td> -->
                 <td>
-                    <a class="redbg" href="/lophocphan/diem/<%= lophocphan.idlophocphan %>">Nhập điểm</a>
-                    <a class="yellowbg" href="/lophocphan/tylechuan/<%= lophocphan.idlophocphan %>">Nhập tỷ lệ chuẩn</a>
-                    <a class="greenbg" href="">Xem đánh giá</a>
+                    <a class="yellowbg" href="/lophocphan/diem/<%= lophocphan.idlophocphan %>">Nhập điểm</a>
+                    <!-- <a class="yellowbg" href="/lophocphan/tylechuan/<%= lophocphan.idlophocphan %>">Nhập tỷ lệ chuẩn</a> -->
+                    <a class="greenbg" href="/lophocphan/danhgia/<%= lophocphan.idlophocphan %>">Xem đánh giá</a>
                 </td>
                 </tr>
             <% }) %>
@@ -99,7 +101,7 @@
             </table>
             <% }) %>
         <% }else{ %>
-            <p>Không có lớp học phần nào để hiển thị</p>
+            <p style="text-align: center; padding: 10px;">Không có lớp học phần nào để hiển thị</p>
         <% } %>
     </main>
 
@@ -110,7 +112,8 @@
             }
 
             return false;
-        }        
+        } 
+        
     </script>
 </body>
 </html>

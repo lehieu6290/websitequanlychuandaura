@@ -29,11 +29,12 @@
         </div>
         <hr>
         <ul>
-            <li><a href="/">Trang chủ</a></li>
+            <!-- <li><a href="/">Trang chủ</a></li> -->
             <li><a href="/lophocphan">Lớp học phần</a></li>
-            <% if(admin){%>
+            
             <li><a href="/hocphan">Chuẩn của các học phần</a></li>
             <li><a href="/chuandaura" class="active">Chuẩn đầu ra</a></li>
+            <% if(admin){%>
             <li><a href="/nguoidung">Người dùng</a></li>
             <% } %>
         </ul>
@@ -41,7 +42,9 @@
     <main>
         <h2 id="title">Danh sách chuẩn đầu ra</h2>
         <div id="insertbuttoncontainer">
+            <% if(admin){%>
             <button onclick="openAddForm()">Thêm chuẩn đầu ra</button>
+            <% } %>
             <form action="/chuandaura/search" method="POST" id="searchcontainer" onsubmit="return checkSearchForm()">
                 <input id="searchinput" name="machuan" type="text" placeholder="Nhập mã hoặc nội dung chuẩn" autocomplete="off">
                 <button id="searchbutton">Tìm</button>
@@ -51,18 +54,22 @@
         <% if(data.rowCount > 0){ %>
         <table id="list">
             <tr>
-                <td>Mã chuẩn</td>
-                <td>Nội dung</td>
-                <td>Hành động</td>
+                <th>Mã chuẩn</th>
+                <th>Nội dung</th>
+                <% if(admin){%>
+                <th>Hành động</th>
+                <% } %>
             </tr>
             <%data.rows.forEach(chuandaura => {%>
                 <tr>
                     <td><%= chuandaura.machuan %></td>
                     <td><%= chuandaura.noidung %></td>
+                    <% if(admin){%>
                     <td>
                         <a onclick="openUpdateForm('<%= chuandaura.machuan %>', '<%= chuandaura.noidung %>')" class="greenbg">Cập nhật</a>
                         <a onclick="openDeleteForm('<%= chuandaura.machuan %>')" class="redbg">Xóa</a>
                     </td>
+                    <% } %>
                 </tr>
             <%})%>
         </table>
@@ -80,7 +87,7 @@
                             <tr>
                                 <td><label for="machuanaddinput">Mã chuẩn</label></td>
                                 <td>
-                                    <input type="text" id="machuanaddinput" class="forminput">
+                                    <input type="text" id="machuanaddinput" class="forminput" autocomplete="off">
                                     <p class="error" id="machuanadderror"></p>
                                 </td>
                             </tr>

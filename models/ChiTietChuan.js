@@ -21,4 +21,16 @@ ChiTietChuan.update = (mahocphan, machuan, mamucdiem, phantram) => {
     return db.query(queryString, params);
 }
 
+ChiTietChuan.insert = (mahocphan, machuan, mamucdiem, phantram) => {
+    const queryString = "INSERT INTO ChiTietChuan VALUES ($1, $2, $3, $4)";
+    const params = [mahocphan, machuan, mamucdiem, phantram];
+    return db.query(queryString, params);
+}
+
+ChiTietChuan.checkExistChuan = (mahocphan, machuan) => {
+    const queryString = "SELECT * FROM ChiTietChuan WHERE mahocphan = $1 AND machuan = $2";
+    const params = [mahocphan, machuan];
+    return db.query(queryString, params);
+}
+
 module.exports = ChiTietChuan;

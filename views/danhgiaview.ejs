@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đánh giá</title>
+    <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div id="avatar-container">
+            <div>
+                <img id="avatar" src="/public/images/avatar.png">
+                <div>
+                    <a href=""><p style="margin-bottom: 5px; font-weight: bold; font-size: 17px;"><%= hoten %></p></a>
+                    <% if(admin){%>
+                        <p>Quản trị viên</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div id="logout-container">
+                <a id="logout-button" href="/logout">
+                    <span>Đăng xuất</span>
+                    <img src="/public/images/logout.png">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <ul>
+            <!-- <li><a href="/">Trang chủ</a></li> -->
+            <li><a href="/lophocphan" class="active">Lớp học phần</a></li>
+            
+            <li><a href="/hocphan">Chuẩn của các học phần</a></li>
+            <li><a href="/chuandaura">Chuẩn đầu ra</a></li>
+            <% if(admin){%>
+            <li><a href="/nguoidung">Người dùng</a></li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <main>
+        <h2 id="title">Đánh giá lớp học phần</h2>
+        <br>
+        <%if(data){%>
+            <div id="tongsodiem"></div>
+            <div id="tongsochuan"></div>
+            <!-- <div style="width: 300px; height: 300px">
+                <canvas id="myChart"></canvas>
+            </div> -->
+
+            <div style="height: 300px;" id="chartContainer"></div>
+
+            <h3 style="margin-bottom: 10px; margin-top: 30px;">Kết quả đánh giá</h3>
+            <table id="list">
+                <tr>
+                    <th>Mã chuẩn</th>
+                    <th>Yêu cầu</th>
+                    <th>Ngưỡng điểm</th>
+                    <th>Thực tế</th>
+                    <th>Kết quả</th>
+                </tr>
+            </table>
+        <%}else{%>
+            <p style="text-align: center;"><%= error%></p>
+        <%}%>
+    </main>
+
+    <script src="/public/chart.js"></script>
+    <script src="/public//canvasjs.min.js"></script>
+    <script>
+
+        '<%if(data){%>'
+        const tongsodiem = '<%= data.tongsodiem %>';
+        const tongsodiemdanhap = '<%= data.tongsodiemdanhap %>';
+        const tongsochuan = '<%= data.tongsochuan %>';
+
+        document.getElementById('tongsodiem').innerHTML = `Số sinh viên đã nhập điểm: <h2>${tongsodiemdanhap}/${tongsodiem}</h2>`;
+        // document.getElementById('tongsochuan').innerHTML = `Tổng số chuẩn đầu ra: ${tongsochuan}`;
+
+        
+
+        var ctx = document.getElementById('myChart');
+        let diemchu = ['A', 'B+', 'B', 'C+', 'C', 'K'];
+
+        let dataChart = []
+        '<% data.phantramdiem.forEach(diem => { %>'
+            '<%if(diem.phantram > 0){ %>'
+                dataChart.push({y: '<%= diem.phantram %>', label: '<%= diem.diemchu %>'})
+        '<% }}) %>'
+        
+        var chart = new CanvasJS.Chart("chartContainer", {
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            exportEnabled: true,
+            animationEnabled: true,
+            title: {
+                text: "Kết quả thống kê"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 25,
+                toolTipContent: "<b>{label}</b>: {y}%",
+                showInLegend: "true",
+                legendText: "{label}",
+                indexLabelFontSize: 16,
+                indexLabel: "{label} - {y}%",
+                dataPoints: dataChart
+            }]
+        });
+        chart.render();
+
+        let ketqua = document.getElementById('list');
+        let tr, td;
+        '<% data.ketqua.forEach(kq => { %>'
+            tr = document.createElement('tr');
+            
+            '<% for(let key in kq){ %>'
+                td = document.createElement('td');
+
+                '<% if(key == "phantram" || key == "thucte"){%>'
+                td.innerHTML = '<%= kq[key] %>%';
+                '<%}else{%>'
+                    td.innerHTML = '<%= kq[key] %>';
+                '<%}%>'
+                '<% if(key == "datchuan" && kq[key] == "Đạt"){%>'
+                    td.style.color = "green";
+                '<%}%>'   
+                '<% if(key == "datchuan" && kq[key] == "Chưa đạt"){%>'
+                    td.style.color = "red";
+                '<%}%>'
+                tr.appendChild(td);
+            '<% } %>'
+            
+            ketqua.appendChild(tr);
+        '<% }) %>'
+        
+        '<%}%>'
+        // var myChart = new Chart(ctx, {
+        //     type: 'pie',
+        //     data: {
+        //         labels: bieudo.labels,
+        //         datasets: [{
+        //             label: '# of Votes',
+        //             data: bieudo.data,
+        //             backgroundColor: [
+        //                 'rgba(255, 99, 132, 0.2)',
+        //                 'rgba(54, 162, 235, 0.2)',
+        //                 'rgba(255, 206, 86, 0.2)',
+        //                 'rgba(75, 192, 192, 0.2)',
+        //                 'rgba(153, 102, 255, 0.2)',
+        //                 'rgba(255, 159, 64, 0.2)'
+        //             ],
+        //             borderColor: [
+        //                 'rgba(255, 99, 132, 1)',
+        //                 'rgba(54, 162, 235, 1)',
+        //                 'rgba(255, 206, 86, 1)',
+        //                 'rgba(75, 192, 192, 1)',
+        //                 'rgba(153, 102, 255, 1)',
+        //                 'rgba(255, 159, 64, 1)'
+        //             ],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true,
+        //                 display: false
+        //             }
+        //         },
+                
+        //         plugins:{
+        //             legend: {
+        //                 position: 'bottom'
+        //             }
+        //         },
+        //     }
+        // });
+    </script>
+</body>
+</html>

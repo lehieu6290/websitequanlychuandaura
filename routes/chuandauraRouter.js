@@ -10,4 +10,6 @@ router.delete('/', chuandauraController.deleteChuanDauRa);
 router.post('/search', chuandauraController.searchChuanDauRa);
 router.post('/checkexist', chuandauraController.checkExistChuanDauRa);
 
+router.post('/search/json', chuandauraController.searchAPI);
+
 module.exports = router;

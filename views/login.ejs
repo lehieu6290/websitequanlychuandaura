@@ -5,24 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập</title>
+    <link rel="stylesheet" href="/public/styles.css">
 </head>
-<body>
-    <h1>Đăng nhập</h1>
-    <form action="login" method="POST">
-        <table>
-            <tr>
-                <td>Tên tài khoản</td>
-                <td><input type="text" name="username" autocomplete="off" value="b1706696"></td>
-            </tr>
-            <tr>
-                <td>Mật khẩu</td>
-                <td><input type="password" name="password" value="12345"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Đăng nhập"></td>
-            </tr>
-        </table>
-    </form>
+<body id="loginbody">
+    <div id="overlay"></div>
+    <h1 id="title">HỆ THỐNG QUẢN LÝ CHUẨN ĐẦU RA CỦA HỌC PHẦN</h1>
+    <div id="center">
+        <div id="form">
+            <h1>Đăng nhập</h1>
+            <% if(error){ %>
+                <p style="text-align: center; color: red; padding-bottom: 10px;">Mã giảng viên hoặc mật khẩu không đúng</p>
+            <% } %>
+            <form action="login" method="POST" onsubmit="return checkForm()">
+                <table>
+                    <tr>
+                        <td>Mã giảng viên</td>
+                        <td>
+                            <input type="text" name="username" autocomplete="off" id="magiangvien">
+                            <p style="padding-top: 5px; color: red" id="magiangvienerror"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mật khẩu</td>
+                        <td>
+                            <input type="password" name="password" id="password">
+                            <p style="padding-top: 5px; color: red" id="passworderror"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button>Đăng nhập</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function checkForm(){
+            let magiangvien = document.getElementById('magiangvien').value;
+            let password = document.getElementById('password').value;
+            let magiangvienError = document.getElementById('magiangvienerror');
+            let passwordError = document.getElementById('passworderror');
+
+            magiangvienError.innerHTML = '';
+            passwordError.innerHTML = '';
+
+            let error = true;
+
+            if(magiangvien == ''){
+                magiangvienError.innerHTML = 'Vui lòng nhập mã giảng viên';
+                error = false;
+            }
+
+            if(password == ''){
+                passwordError.innerHTML = 'Vui lòng nhập mật khẩu';
+                error = false;
+            }
+
+            return error;
+        }
+    </script>
 </body>
 </html>

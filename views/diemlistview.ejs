@@ -5,26 +5,116 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý điểm</title>
+    <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
-    <h1>Danh sách điểm</h1>
-    <% if(data.rowCount > 0){ %>
-        <table border="1">
-        <tr>
-            <td>Mã số sinh viên</td>
-            <td>Họ tên</td>
-            <td>Điểm</td>
-        </tr>
-        <% data.rows.forEach((diem) => { %>
+    <nav id="navbar">
+        <div id="avatar-container">
+            <div>
+                <img id="avatar" src="/public/images/avatar.png">
+                <div>
+                    <a href=""><p style="margin-bottom: 5px; font-weight: bold; font-size: 17px;"><%= hoten %></p></a>
+                    <% if(admin){%>
+                        <p>Quản trị viên</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div id="logout-container">
+                <a id="logout-button" href="/logout">
+                    <span>Đăng xuất</span>
+                    <img src="/public/images/logout.png">
+                </a>
+            </div>
+        </div>
+        <hr>
+        <ul>
+            <!-- <li><a href="/">Trang chủ</a></li> -->
+            <li><a href="/lophocphan" class="active">Lớp học phần</a></li>
+            
+            <li><a href="/hocphan">Chuẩn của các học phần</a></li>
+            <li><a href="/chuandaura">Chuẩn đầu ra</a></li>
+            <% if(admin){%>
+            <li><a href="/nguoidung">Người dùng</a></li>
+            <% } %>
+        </ul>
+    </nav>
+    <main>
+        <h2 id="title">Danh sách điểm</h2>
+        <br>
+        <% if(data.rowCount > 0){ %>
+        <input type="hidden" id="idlophocphan" value="<%= idlophocphan %>">
+        <table id="list">
             <tr>
-            <td><%= diem.masinhvien %></td>
-            <td><%= diem.hoten %></td>
-            <td><input type="text" value="<%= diem.diem %>"></td>
+                <th>Mã số sinh viên</th>
+                <th>Họ tên</th>
+                <th>Điểm</th>
             </tr>
-        <% }) %>
+            <% data.rows.forEach((diem) => { %>
+                <tr>
+                    <td class="masinhvien col1"><%= diem.masinhvien %></td>
+                    <td class="col3"><%= diem.hoten %></td>
+                    <td class="col2">
+                        <input type="number" class="dieminput" value="<%= diem.diem %>" min="0" max="100">
+                        <p class="diemerror" style="color: red;"></p>
+                    </td>
+                </tr>
+            <% }) %>
         </table>
-    <% }else{ %>
-        <p>Không có sinh viên nào để hiển thị</p>
-    <% } %>
+        <p class="error" id="updateError" style="text-align: center;"></p>
+        <div id="insertbuttoncontainer">
+            <button class="greenbg" id="submitButton">Cập nhật</button>
+        </div>
+        <% }else{ %>
+            <p style="text-align: center; padding: 10px;">Không có sinh viên nào để hiển thị</p>
+        <% } %>
+    </main>
+
+    <script>
+        function clearError(){
+            document.getElementById('updateError').innerHTML = '';
+            const diemError = document.getElementsByClassName("diemerror");
+            for(let i = 0; i < diemError.length; i++){
+                diemError[i].innerHTML = '';
+            }
+        }
+
+        document.getElementById('submitButton').addEventListener('click', function(){
+            clearError();
+            const diemInputArray = document.getElementsByClassName("dieminput");
+            const masinhvienArray = document.getElementsByClassName("masinhvien");
+            const diemError = document.getElementsByClassName("diemerror");
+
+            let error = false;
+            for(let i = 0; i < diemInputArray.length; i++){
+                if(parseFloat(diemInputArray[i].value) < 0 || parseFloat(diemInputArray[i].value) > 10){
+                    diemError[i].innerHTML = 'Điểm phải >= 0 và <= 10';
+                    error = true;
+                }    
+            }
+
+            if(error) return false;
+
+            let arr = [];
+            for(let i = 0; i < diemInputArray.length; i++){  
+                let obj = { masinhvien: masinhvienArray[i].innerHTML, diem: diemInputArray[i].value || null};
+                arr.push(obj);
+            }
+            
+            const idlophocphan = document.getElementById("idlophocphan").value;
+            let data = { idlophocphan, data: arr };
+
+            fetch('/lophocphan/diem', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status){
+                    location.reload();
+                    // window.location.replace("/lophocphan/diem/" + idlophocphan);
+                }else{
+                    document.getElementById('updateError').innerHTML = 'Cập nhật thất bại. Vui lòng thử lại';
+                }
+            });
+        })
+    </script>
 </body>
 </html>
