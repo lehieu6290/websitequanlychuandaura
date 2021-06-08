@@ -136,6 +136,42 @@ main #list{
     margin-top: 10px;
 }
 
+main #tylechuan{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+#tylechuan td, th{
+    text-align: left;
+    padding: 5px 10px;
+}
+
+#tylechuan a{
+    text-decoration: none;
+    color: #fff;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+#tylechuan tr:nth-child(even){
+    background-color: rgb(169, 210, 250);
+}
+
+#tylechuan tr:nth-child(odd){
+    background-color: rgb(181, 228, 255);
+}
+
+#tylechuan tr:first-child{
+    background-color: rgb(190, 190, 190);
+}
+
+#tylechuan input{
+    padding: 5px;
+    font-size: 16px;
+}
+
 /* Button backgrouund */
 a.redbg{
     background-color: rgb(255, 66, 66);

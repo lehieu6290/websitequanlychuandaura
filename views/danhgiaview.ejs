@@ -62,6 +62,15 @@
                     <th>Kết quả</th>
                 </tr>
             </table>
+
+            <h3 style="margin-bottom: 10px; margin-top: 30px;">Tỷ lệ các chuẩn đầu ra trong điểm</h3>
+            <table id="tylechuan">
+                <tr>
+                    <th>Mã chuẩn</th>
+                    <th>Nội dung</th>
+                    <th>Tỷ lệ</th>
+                </tr>
+            </table>
         <%}else{%>
             <p style="text-align: center;"><%= error%></p>
         <%}%>
@@ -71,7 +80,7 @@
     <script src="/public//canvasjs.min.js"></script>
     <script>
 
-        '<%if(data){%>'
+    '<%if(data){%>'
         const tongsodiem = '<%= data.tongsodiem %>';
         const tongsodiemdanhap = '<%= data.tongsodiemdanhap %>';
         const tongsochuan = '<%= data.tongsochuan %>';
@@ -134,8 +143,33 @@
             
             ketqua.appendChild(tr);
         '<% }) %>'
+
+        let tylechuan = document.getElementById('tylechuan');
+        '<% data.tylechuan.forEach(kq => { %>'
+            tr = document.createElement('tr');
+            
+            '<% for(let key in kq){ %>'
+                td = document.createElement('td');
+                '<% if(key != "malophocphan"){%>'
+                    '<% if(key == "tyle"){%>'
+                        '<% if(kq["tyle"] != null){%>'
+                            td.innerHTML = '<%= kq["tyle"] %>';
+                        '<%}else{%>'
+                            td.innerHTML = 'Chưa nhập';
+                        '<%}%>'
+                    '<%}else{%>'
+                        td.innerHTML = '<%= kq[key] %>';
+                        
+                    '<%}%>'
+                    tr.appendChild(td);
+                '<%}%>'
+            '<% } %>'
+            
+            tylechuan.appendChild(tr);
+        '<% }) %>'
         
-        '<%}%>'
+    '<%}%>'
+        
         // var myChart = new Chart(ctx, {
         //     type: 'pie',
         //     data: {

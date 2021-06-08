@@ -144,13 +144,29 @@ module.exports = {
                             }
                         }
 
+                        let tylechuan = []
+                        const tylechuanData = await TyLeChuan.getChuanDauRa(idlophocphan);
+                        if(tylechuanData.rowCount > 0){
+                            for(let i = 0; i < tylechuanData.rows.length; i++){
+                                const {machuan, noidung, malophocphan} = tylechuanData.rows[i];
+                                const tylechuanData2 = await TyLeChuan.getTyLeChuan(idlophocphan, machuan);
+                                
+                                if(tylechuanData2.rowCount > 0){
+                                    tylechuan.push({malophocphan, machuan, noidung, tyle: tylechuanData2.rows[0].tyle});
+                                }else{
+                                    tylechuan.push({malophocphan, machuan, noidung, tyle: null});
+                                }
+                            }
+                        }
+
                         
                         const data = {
                             tongsodiem: diem.length,
                             tongsodiemdanhap: diemdanhap.length,
                             tongsochuan: chuandaura.rowCount,
                             phantramdiem,
-                            ketqua
+                            ketqua,
+                            tylechuan
                         }
 
                         res.render('danhgiaview', {idlophocphan, magiangvien, hoten, admin, data});
